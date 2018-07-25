@@ -1,0 +1,8 @@
+{
+  "name": "elite",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "ionic-angular",
+  "pro_id": "795a2dda"
+}
