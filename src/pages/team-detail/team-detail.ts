@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, AlertController, ToastController } from 'ionic-angular';
 import { MyTeamsPage } from '../my-teams/my-teams';
 import { GamePage } from '../game/game';
 import { EliteApiProvider} from '../../providers/elite-api/elite-api';
 import * as _ from 'lodash';
+import moment from 'moment';
 
 @Component({
   selector: 'page-team-detail',
@@ -11,14 +12,48 @@ import * as _ from 'lodash';
 })
 export class TeamDetailPage {
 
+  private allGames : any[];
   public team:any = {};
   public games: any[];
-  public tourneyData : any;
+  public tourneyData : any = {};
+  private teamStanding : any = {};
+  private dateFilter:string;
+  private useFilter:boolean;
+  private isFollowing:boolean;
 
   constructor(
     public navCtrl: NavController, 
+    private alterCtrl: AlertController,
+    private toastCtrl : ToastController,
     public eliteApi : EliteApiProvider, 
     public navParams: NavParams) {      
+  }
+
+  toggleFollow(){
+     if(this.isFollowing){
+       let confirm = this.alterCtrl.create({
+         title : 'Unfollow',
+         message : 'Are you sure to unfollow?',
+         buttons : [{
+           text : 'Yes',
+           handler : () => {
+             this.isFollowing = false;
+             //TODO
+             
+             this.toastCtrl.create({
+               message : 'You have unfollowed ' + this.team.name,
+               duration : 3000,
+               position : 'bottom'
+             }).present();
+           }
+         },{
+           text : 'No'
+         }]
+       });
+       confirm.present();
+     }else{
+       this.isFollowing = true;
+     }
   }
 
   goHome(){
@@ -53,7 +88,22 @@ export class TeamDetailPage {
                       };
                   })
                   .value();
-                  
+    this.allGames = this.games;
+    this.teamStanding = _.find(this.tourneyData.standings, {'teamId' : this.team.id});            
+  }
+
+  loadAll() {
+    console.log('userFilter', this.useFilter);
+    this.useFilter = false;
+    this.dateChanged();
+  }
+
+  dateChanged() {
+    if(this.useFilter){
+      this.games = _.filter(this.allGames, g=> moment(g.time).isSame(this.dateFilter, 'day'));
+    }else{
+      this.games = this.allGames;
+    }    
   }
 
   getScoreDisplay(isTeam1, team1Score, team2Score) {
@@ -66,11 +116,19 @@ export class TeamDetailPage {
         else {
             return "";
         }
-    }
+  }
   
+  getScoreBadge(g) {
+    return g.scoreDisplay ? g.scoreDisplay[0] : '';
+  }
+
+  showColor(g) {
+    var color = this.getScoreBadge(g) === 'W' ? '' : 'danger';
+    return color;
+  }
+
   gameClicked($event, game){
     let sourceGame = this.tourneyData.games.find(g => g.id === game.gameId);
     this.navCtrl.parent.parent.push(GamePage, sourceGame);
   }
-
 }

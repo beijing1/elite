@@ -13,5 +13,8 @@
 </ion-header>
 
 <ion-content padding>
-    <button ion-item (click)='itemTapped(e, team)' *ngFor='let team of teams'>{{team.name}}</button>
+    <ion-item-group *ngFor='let d of teams'>
+    	<ion-item-divider color='secondary'>{{d.divisionName}}</ion-item-divider>
+    	<button ion-item (click)='itemTapped(e, t)' *ngFor='let t of d.divisionTeams'>{{t.name}}</button>
+    </ion-item-group>
 </ion-content>

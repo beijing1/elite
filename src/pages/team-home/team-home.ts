@@ -10,9 +10,9 @@ import { MyTeamsPage } from '../my-teams/my-teams';
 })
 export class TeamHomePage {
 
-  public team:any = {};    
-  public teamDetailTab = TeamDetailPage;
-  public standingsTab = StandingsPage;
+  private team:any = {};    
+  private teamDetailTab = TeamDetailPage;
+  private standingsTab = StandingsPage;
     
   constructor(public navCtrl: NavController, public navParams: NavParams) {
       this.team = this.navParams.data;
