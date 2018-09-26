@@ -1,7 +1,7 @@
-<ion-menu [content]="content">
+<ion-menu [content]="myContent">
   <ion-header>
     <ion-toolbar>
-      <ion-title>Elite Schedule</ion-title>
+      <ion-title>Schedule</ion-title>
     </ion-toolbar>
   </ion-header>
 
@@ -12,8 +12,7 @@
        <button menuClose ion-item (click)="goToTournaments()">Find a Tournament</button>
     </ion-list>
   </ion-content>
-
 </ion-menu>
 
 <!-- Disable swipe-to-go-back because it's poor UX to combine STGB with side menus -->
-<ion-nav [root]="rootPage" #content swipeBackEnabled="true"></ion-nav>
+<ion-nav [root]="root" #myContent swipeBackEnabled="true"></ion-nav>

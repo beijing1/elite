@@ -14,7 +14,7 @@ import { TournamentsPage } from '../pages/tournaments/tournaments';
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
-  rootPage: any = MyTeamsPage; 
+  root: any = MyTeamsPage; 
 
   pages: Array<{title: string, component: any}>;
 
