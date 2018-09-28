@@ -14,6 +14,7 @@ export class TeamsPage {
   private allTeams = [];  
   private teams:any;
   private allTeamDivisions;
+  public queryText:string;
 
   constructor(
     private navCtrl: NavController, 
@@ -45,6 +46,19 @@ export class TeamsPage {
         loader.dismiss();
       })
     });   
+  }
+
+  updateTeams(){
+    let queryTextLower = this.queryText.toLowerCase();
+    let filteredTeams = [];
+    _.forEach(this.allTeamDivisions, td => {
+      let teams = _.filter(td.divisionTeams, t => (<any>t).name.toLowerCase().includes(queryTextLower));
+      if(teams.length){
+        filteredTeams.push({divisionName:td.divisionName, divisioinTeams : teams});
+      }
+    });
+
+    this.teams = filteredTeams;
   }
 
   itemTapped(e, team){

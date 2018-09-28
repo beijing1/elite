@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule, Injectable, Injector } from '@angular/core';
 import { HttpModule } from '@angular/http';
+import {IonicStorageModule} from '@ionic/storage';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { MyApp } from './app.component';
 import { StatusBar } from '@ionic-native/status-bar';
@@ -15,6 +16,7 @@ import { StandingsPage}  from '../pages/standings/standings';
 import { EliteApiProvider } from '../providers/elite-api/elite-api';
 
 import { Pro } from '@ionic/pro';
+import { UserSettings } from '../providers/user-settings/user-settings';
 
 Pro.init('YOUR_APP_ID', {
   appVersion: 'APP_VERSION'
@@ -55,6 +57,7 @@ export class MyErrorHandler implements ErrorHandler {
   imports: [
     BrowserModule,
     HttpModule,
+    IonicStorageModule.forRoot(),
     IonicModule.forRoot(MyApp),
   ],
   bootstrap: [IonicApp],
@@ -73,7 +76,8 @@ export class MyErrorHandler implements ErrorHandler {
     SplashScreen,
     IonicErrorHandler,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    EliteApiProvider
+    EliteApiProvider,
+    UserSettings
   ]
 })
 export class AppModule {}

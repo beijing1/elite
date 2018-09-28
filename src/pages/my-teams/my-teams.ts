@@ -3,6 +3,7 @@ import { NavController,LoadingController } from 'ionic-angular';
 import{TournamentsPage} from '../tournaments/tournaments';
 import { EliteApiProvider } from '../../providers/elite-api/elite-api';
 import { TeamHomePage } from '../team-home/team-home';
+import { UserSettings } from '../../providers/user-settings/user-settings';
 
 @Component({
     selector : 'page-my-teams',
@@ -10,26 +11,19 @@ import { TeamHomePage } from '../team-home/team-home';
 })
 export class MyTeamsPage{
     
-	public favorites = [
-		{
-			team : {id:6182, name:'Fodddo', coach:'Michael'},
-			tournamentId: '3dd50aaf-6b03-4497-b074-d81703f07ee8',
-			tournamentName : 'wooo'
-		},
-		{
-			team : {id:805, name:'Bddddar', coach:'George'},
-			tournamentId: '98c6857e-b0d1-4295-b89e-2d95a45437f2',
-			tournamentName : 'hoo'
-		}
-	];
+	public favorites = [];
 
     constructor(
     	private nav:NavController, 
     	private eliteApi : EliteApiProvider,
+    	private userSettings : UserSettings,
     	private loadingCtrl : LoadingController){
-        
     }
     
+    ionViewDidEnter(){
+    	this.favorites = this.userSettings.getFavorites()
+    }
+
     favoriteTapped(e, i){
 		let loader = this.loadingCtrl.create({
 	      content : 'Please wait ... '

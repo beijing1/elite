@@ -3,6 +3,8 @@ import { NavController, NavParams, AlertController, ToastController } from 'ioni
 import { MyTeamsPage } from '../my-teams/my-teams';
 import { GamePage } from '../game/game';
 import { EliteApiProvider} from '../../providers/elite-api/elite-api';
+import { UserSettings } from '../../providers/user-settings/user-settings';
+
 import * as _ from 'lodash';
 import moment from 'moment';
 
@@ -24,6 +26,7 @@ export class TeamDetailPage {
   constructor(
     public navCtrl: NavController, 
     private alterCtrl: AlertController,
+    private userSettings : UserSettings,
     private toastCtrl : ToastController,
     public eliteApi : EliteApiProvider, 
     public navParams: NavParams) {      
@@ -38,8 +41,7 @@ export class TeamDetailPage {
            text : 'Yes',
            handler : () => {
              this.isFollowing = false;
-             //TODO
-             
+             this.userSettings.unfavoriteTeam(this.team);             
              this.toastCtrl.create({
                message : 'You have unfollowed ' + this.team.name,
                duration : 3000,
@@ -53,7 +55,15 @@ export class TeamDetailPage {
        confirm.present();
      }else{
        this.isFollowing = true;
+       this.userSettings.favoriteTeam(this.team, this.tourneyData.tournament.id, this.tourneyData.tournament.name);
      }
+  }
+
+  refreshAll(e){
+    this.eliteApi.refreshCurrentTourney().subscribe(()=>{
+      e.complete();
+      this.ionViewDidLoad();
+    });
   }
 
   goHome(){
@@ -89,7 +99,8 @@ export class TeamDetailPage {
                   })
                   .value();
     this.allGames = this.games;
-    this.teamStanding = _.find(this.tourneyData.standings, {'teamId' : this.team.id});            
+    this.teamStanding = _.find(this.tourneyData.standings, {'teamId' : this.team.id});
+    this.userSettings.isFavoriteTeam(this.team.id.toString()).then(v => this.isFollowing = v);
   }
 
   loadAll() {
